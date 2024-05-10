@@ -1,0 +1,58 @@
+<!-- chatbot/templates/chatbot/home.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        /* Add CSS styles for your chatbot GUI here */
+        .chat-container {
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div id="chat-display">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <input type="text" id="user-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var userInput = document.getElementById('user-input').value;
+            displayMessage(userInput, 'user');
+            document.getElementById('user-input').value = '';
+            fetch(`/respond/?message=${userInput}`)
+                .then(response => response.json())
+                .then(data => {
+                    var botResponse = data.response;
+                    displayMessage(botResponse, 'bot');
+                });
+        }
+
+        function displayMessage(message, sender) {
+            var chatDisplay = document.getElementById('chat-display');
+            var messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.textContent = `${sender}: ${message}`;
+            chatDisplay.appendChild(messageDiv);
+        }
+    </script>
+</body>
+
+</html>
